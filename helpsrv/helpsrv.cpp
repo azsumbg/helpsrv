@@ -143,9 +143,17 @@ template<typename T> bool dll::GROUPPER<T>::insert(size_t index, T element)
 }
 template<typename T> bool dll::GROUPPER<T>::erase(size_t index)
 {
-	if(!is_valid || next_pos == 0)return false;
+	if(!is_valid || next_pos <= 1)return false;
 
+	T* tempPtr{ reinterpret_cast<T*>(calloc(max_size,sizeof(T))) };
 
+	for (size_t count = 0; count < next_pos - 1; count++)
+	{
+		if (count < index)tempPtr[count] = mPtr[count];
+		else if (count >= index)tempPtr[count] = mPtr[count + 1];
+	}
+	mPtr = tempPtr;
+	next_pos--;
 }
 
 ///////////////////////////////////////////////
