@@ -79,6 +79,7 @@ namespace dll
 
 		bool is_valid{ false };
 
+	public:
 		GROUPPER();
 		GROUPPER(size_t lenght);
 		~GROUPPER();
@@ -90,6 +91,9 @@ namespace dll
 		void push_back(T element);
 		void push_front(T element);
 
+		bool insert(size_t index, T element);
+		bool erase(size_t index);
+
 		T& begin();
 		T& last();
 
@@ -97,6 +101,8 @@ namespace dll
 		void operator()(size_t index, T element);
 	};
 
+	float Distance(FPOINT start_point, FPOINT target_point);
 
+	bool Sort(GROUPPER<FPOINT>& bag, FPOINT target);
 
 }

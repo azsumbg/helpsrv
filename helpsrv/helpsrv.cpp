@@ -99,4 +99,95 @@ template<typename T> T& dll::GROUPPER<T>::last()
 	return dummy;
 }
 
+template<typename T> bool dll::GROUPPER<T>::insert(size_t index, T element)
+{
+	if (!is_valid || index >= next_pos || next_pos == 0)return false;
+
+	if (index == next_pos - 1)
+	{
+		mPtr[next_pos - 1] = element;
+		return true;
+	}
+	else
+	{
+		if (next_pos >= max_size)
+		{
+			T* tempPtr{ reinterpret_cast<T*>(calloc(max_size + 1,sizeof(T)) };
+			for (size_t count = 0; count < max_size + 1, ++count)
+			{
+				if (count < index)tempPtr[count] = mPtr[count];
+				else if (count == index)tempPtr[count] = element;
+				else tempPtr[count + 1] = mPtr[count];
+			}
+			mPtr = tempPtr;
+			++max_size;
+			++next_pos;
+			return true;
+		}
+		else
+		{
+			T* tempPtr{ reinterpret_cast<T*>(calloc(max_size,sizeof(T)) };
+			for (size_t count = 0; count < next_pos, ++count)
+			{
+				if (count < index)tempPtr[count] = mPtr[count];
+				else if (count == index)tempPtr[count] = element;
+				else tempPtr[count + 1] = mPtr[count];
+			}
+			mPtr = tempPtr;
+			++next_pos;
+			return true;
+		}
+	}
+
+	return false;
+}
+template<typename T> bool dll::GROUPPER<T>::erase(size_t index)
+{
+	if(!is_valid || next_pos == 0)return false;
+
+
+}
+
 ///////////////////////////////////////////////
+
+// Distance algorithm *************************
+
+float dll::Distance(FPOINT start_point, FPOINT target_point)
+{
+	float a = (float)(pow(abs(target_point.x - start_point.x), 2));
+	float b = (float)(pow(abs(target_point.y - start_point.y), 2));
+
+	return sqrt(a + b);
+}
+
+//////////////////////////////////////////////
+
+// sorting algorithm for GROUPPER ************
+
+bool dll::Sort(GROUPPER<FPOINT>& Bag, FPOINT target)
+{
+	if (Bag.size() < 2)return false;
+
+	bool sorted = false;
+	
+	while (!sorted)
+	{
+		sorted = true;
+
+		for (size_t pos = 0; pos < Bag.size() - 1; ++pos)
+		{
+			if (Distance(Bag[pos], target) > Distance(Bag[pos + 1], target))
+			{
+				FPOINT temp = Bag[pos];
+				Bag(pos, Bag[pos + 1]);
+				Bag((pos + 1), temp);
+				sorted = false;
+				break;
+			}
+		}
+	}
+
+	return true;
+}
+
+//////////////////////////////////////////////
