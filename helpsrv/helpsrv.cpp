@@ -170,7 +170,7 @@ float dll::Distance(FPOINT start_point, FPOINT target_point)
 
 //////////////////////////////////////////////
 
-// sorting algorithm for GROUPPER ************
+// sorting algorithm for GROUPPER<FPOINT> ************
 
 bool dll::Sort(GROUPPER<FPOINT>& Bag, FPOINT target)
 {
@@ -199,3 +199,476 @@ bool dll::Sort(GROUPPER<FPOINT>& Bag, FPOINT target)
 }
 
 //////////////////////////////////////////////
+
+// PROTON ***********************************
+
+dll::PROTON::PROTON()
+{
+	start.x = 1.0f;
+	start.y = 1.0f;
+
+	width = 1.0f;
+	height = 1.0f;
+
+	end.x = start.x + width;
+	end.y = start.y + height;
+
+	x_radius = start.x + (end.x - start.x) / 2;
+	y_radius = start.y + (end.y - start.y) / 2;
+
+	center.x = start.x + x_radius;
+	center.y = start.y + y_radius;
+}
+dll::PROTON::PROTON(float _sx, float _sy, float _width, float _height)
+{
+	start.x = _sx;
+	start.y = _sy;
+
+	width = _width;
+	height = _height;
+
+	end.x = start.x + width;
+	end.y = start.y + height;
+
+	x_radius = start.x + (end.x - start.x) / 2;
+	y_radius = start.y + (end.y - start.y) / 2;
+
+	center.x = start.x + x_radius;
+	center.y = start.y + y_radius;
+}
+
+void dll::PROTON::SetEdges()
+{	
+	end.x = start.x + width;
+	end.y = start.y + height;
+
+	x_radius = start.x + (end.x - start.x) / 2;
+	y_radius = start.y + (end.y - start.y) / 2;
+
+	center.x = start.x + x_radius;
+	center.y = start.y + y_radius;
+}
+
+void dll::PROTON::NewDims(float _new_width, float _new_height)
+{
+	width = _new_width;
+	height = _new_height;
+
+	end.x = start.x + width;
+	end.y = start.y + height;
+
+	x_radius = start.x + (end.x - start.x) / 2;
+	y_radius = start.y + (end.y - start.y) / 2;
+
+	center.x = start.x + x_radius;
+	center.y = start.y + y_radius;
+}
+void dll::PROTON::NewWidth(float _new_width)
+{
+	width = _new_width;
+	
+	end.x = start.x + width;
+	
+	x_radius = start.x + (end.x - start.x) / 2;
+	
+	center.x = start.x + x_radius;
+}
+void dll::PROTON::NewHeight(float _new_height)
+{
+	height = _new_height;
+
+	end.y = start.y + height;
+
+	y_radius = start.y + (end.y - start.y) / 2;
+
+	center.y = start.y + y_radius;
+}
+
+float dll::PROTON::GetWidth() const
+{
+	return width;
+}
+float dll::PROTON::GetHeight() const
+{
+	return height;
+}
+
+/////////////////////////////////////////////
+
+// BASE *************************************
+
+dll::BASE::BASE(uint8_t _what_to_create, float _sx, float _sy) :PROTON()
+{
+	_type = _what_to_create;
+
+	start.x = _sx;
+	start.y = _sy;
+
+	switch (_type)
+	{
+	case field1_type:
+		NewDims(1000.0f, 750.0f);
+		_max_frames = 16;
+		_frame_delay = 5;
+		break;
+
+	case field2_type:
+		NewDims(1000.0f, 750.0f);
+		_max_frames = 18;
+		_frame_delay = 4;
+		break;
+
+	case field3_type:
+		NewDims(1000.0f, 750.0f);
+		_max_frames = 12;
+		_frame_delay = 6;
+		break;
+
+	case field4_type:
+		NewDims(1000.0f, 750.0f);
+		_max_frames = 20;
+		_frame_delay = 4;
+		break;
+
+	case field5_type:
+		NewDims(1000.0f, 750.0f);
+		_max_frames = 8;
+		_frame_delay = 9;
+		break;
+
+	case intro_type:
+		NewDims(1000.0f, 800.0f);
+		_max_frames = 8;
+		_frame_delay = 9;
+		break;
+
+	case fireball_type:
+		NewDims(20.0f, 12.0f);
+		_max_frames = 4;
+		_frame_delay = 18;
+		break;
+
+	case ev_archer_type:
+		NewDims(80.0f, 80.0f);
+		_max_frames = 6;
+		_frame_delay = 12;
+		break;
+
+	case ev_coyote_type:
+		NewDims(100.0f, 51.0f);
+		_max_frames = 26;
+		_frame_delay = 3;
+		break;
+
+	case ev_dragon_type:
+		NewDims(200.0f, 120.0f);
+		_max_frames = 21;
+		_frame_delay = 4;
+		break;
+
+	case ev_hydra_type:
+		NewDims(100.0f, 75.0f);
+		_max_frames = 12;
+		_frame_delay = 6;
+		break;
+
+	case ev_mage_type:
+		NewDims(70.0f, 70.0f);
+		_max_frames = 6;
+		_frame_delay = 12;
+		break;
+
+	case ev_minotaur_type:
+		NewDims(78.0f, 100.0f);
+		_max_frames = 7;
+		_frame_delay = 10;
+		break;
+
+	case ev_warrior_type:
+		NewDims(80.0f, 59.0f);
+		_max_frames = 8;
+		_frame_delay = 12;
+		break;
+
+	case gd_archer_type:
+		NewDims(80.0f, 57.0f);
+		_max_frames = 42;
+		_frame_delay = 2;
+		break;
+
+	case gd_horse_type:
+		NewDims(100.0f, 94.0f);
+		_max_frames = 44;
+		_frame_delay = 2;
+		break;
+
+	case gd_dragon_type:
+		NewDims(180.0f, 126.0f);
+		_max_frames = 7;
+		_frame_delay = 10;
+		break;
+
+	case gd_hydra_type:
+		NewDims(100.0f, 57.0f);
+		_max_frames = 60;
+		_frame_delay = 1;
+		break;
+
+	case gd_unicorn_type:
+		NewDims(110.0f, 96.0f);
+		_max_frames = 20;
+		_frame_delay = 4;
+		break;
+
+	case gd_minotaur_type:
+		NewDims(78.0f, 100.0f);
+		_max_frames = 7;
+		_frame_delay = 10;
+		break;
+
+	case gd_warrior_type:
+		NewDims(78.0f, 90.0f);
+		_max_frames = 8;
+		_frame_delay = 12;
+		break;
+	}
+}
+
+int dll::BASE::GetFrame()
+{
+	--_frame_delay;
+	if (_frame_delay <= 0)
+	{
+		switch (_type)
+		{
+		case field1_type:
+			_frame_delay = 5;
+			break;
+
+		case field2_type:
+			_frame_delay = 4;
+			break;
+
+		case field3_type:
+			_frame_delay = 6;
+			break;
+
+		case field4_type:
+			_frame_delay = 4;
+			break;
+
+		case field5_type:
+			_frame_delay = 9;
+			break;
+
+		case intro_type:
+			_frame_delay = 9;
+			break;
+
+		case fireball_type:
+			_frame_delay = 18;
+			break;
+
+		case ev_archer_type:
+			_frame_delay = 12;
+			break;
+
+		case ev_coyote_type:
+			_frame_delay = 3;
+			break;
+
+		case ev_dragon_type:
+			_frame_delay = 4;
+			break;
+
+		case ev_hydra_type:
+			_frame_delay = 6;
+			break;
+
+		case ev_mage_type:
+			_frame_delay = 12;
+			break;
+
+		case ev_minotaur_type:
+			_frame_delay = 10;
+			break;
+
+		case ev_warrior_type:
+			_frame_delay = 12;
+			break;
+
+		case gd_archer_type:
+			_frame_delay = 2;
+			break;
+
+		case gd_horse_type:
+			_frame_delay = 2;
+			break;
+
+		case gd_dragon_type:
+			_frame_delay = 10;
+			break;
+
+		case gd_hydra_type:
+			_frame_delay = 1;
+			break;
+
+		case gd_unicorn_type:
+			_frame_delay = 4;
+			break;
+
+		case gd_minotaur_type:
+			_frame_delay = 10;
+			break;
+
+		case gd_warrior_type:
+			_frame_delay = 12;
+			break;
+		}
+
+		++_frame;
+		if (_frame >= _max_frames)_frame = 0;
+	}
+
+	return _frame;
+}
+uint8_t dll::BASE::GetType() const
+{
+	return _type;
+}
+bool dll::BASE::ChangeType(uint8_t _to_what)
+{
+	_type = _to_what;
+	_frame = 0;
+
+	switch (_type)
+	{
+	case field1_type:
+		NewDims(1000.0f, 750.0f);
+		_max_frames = 16;
+		_frame_delay = 5;
+		break;
+
+	case field2_type:
+		NewDims(1000.0f, 750.0f);
+		_max_frames = 18;
+		_frame_delay = 4;
+		break;
+
+	case field3_type:
+		NewDims(1000.0f, 750.0f);
+		_max_frames = 12;
+		_frame_delay = 6;
+		break;
+
+	case field4_type:
+		NewDims(1000.0f, 750.0f);
+		_max_frames = 20;
+		_frame_delay = 4;
+		break;
+
+	case field5_type:
+		NewDims(1000.0f, 750.0f);
+		_max_frames = 8;
+		_frame_delay = 9;
+		break;
+
+	case intro_type:
+		NewDims(1000.0f, 800.0f);
+		_max_frames = 8;
+		_frame_delay = 9;
+		break;
+
+	case fireball_type:
+		NewDims(20.0f, 12.0f);
+		_max_frames = 4;
+		_frame_delay = 18;
+		break;
+
+	case ev_archer_type:
+		NewDims(80.0f, 80.0f);
+		_max_frames = 6;
+		_frame_delay = 12;
+		break;
+
+	case ev_coyote_type:
+		NewDims(100.0f, 51.0f);
+		_max_frames = 26;
+		_frame_delay = 3;
+		break;
+
+	case ev_dragon_type:
+		NewDims(200.0f, 120.0f);
+		_max_frames = 21;
+		_frame_delay = 4;
+		break;
+
+	case ev_hydra_type:
+		NewDims(100.0f, 75.0f);
+		_max_frames = 12;
+		_frame_delay = 6;
+		break;
+
+	case ev_mage_type:
+		NewDims(70.0f, 70.0f);
+		_max_frames = 6;
+		_frame_delay = 12;
+		break;
+
+	case ev_minotaur_type:
+		NewDims(78.0f, 100.0f);
+		_max_frames = 7;
+		_frame_delay = 10;
+		break;
+
+	case ev_warrior_type:
+		NewDims(80.0f, 59.0f);
+		_max_frames = 8;
+		_frame_delay = 12;
+		break;
+
+	case gd_archer_type:
+		NewDims(80.0f, 57.0f);
+		_max_frames = 42;
+		_frame_delay = 2;
+		break;
+
+	case gd_horse_type:
+		NewDims(100.0f, 94.0f);
+		_max_frames = 44;
+		_frame_delay = 2;
+		break;
+
+	case gd_dragon_type:
+		NewDims(180.0f, 126.0f);
+		_max_frames = 7;
+		_frame_delay = 10;
+		break;
+
+	case gd_hydra_type:
+		NewDims(100.0f, 57.0f);
+		_max_frames = 60;
+		_frame_delay = 1;
+		break;
+
+	case gd_unicorn_type:
+		NewDims(110.0f, 96.0f);
+		_max_frames = 20;
+		_frame_delay = 4;
+		break;
+
+	case gd_minotaur_type:
+		NewDims(78.0f, 100.0f);
+		_max_frames = 7;
+		_frame_delay = 10;
+		break;
+
+	case gd_warrior_type:
+		NewDims(78.0f, 90.0f);
+		_max_frames = 8;
+		_frame_delay = 12;
+		break;
+	}
+}
+
+/////////////////////////////////////////////

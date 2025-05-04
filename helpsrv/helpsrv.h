@@ -105,4 +105,53 @@ namespace dll
 
 	bool Sort(GROUPPER<FPOINT>& bag, FPOINT target);
 
+	//////////////////////////////////////////////////////
+
+	class HELPSRV_API PROTON
+	{
+	protected:
+		float width{ 0 };
+		float height{ 0 };
+
+	public:
+		FPOINT start{};
+		FPOINT end{};
+		FPOINT center{};
+		float x_radius{0};
+		float y_radius{ 0 };
+
+		PROTON();
+		PROTON(float _sx, float _sy, float _width, float _height);
+		virtual ~PROTON() {};
+
+		void SetEdges();
+
+		void NewDims(float _new_width, float _new_height);
+		void NewWidth(float _new_width);
+		void NewHeight(float _new_height);
+
+		float GetWidth() const;
+		float GetHeight() const;
+	};
+
+	class HELPSRV_API BASE :public PROTON
+	{
+	protected:
+		uint8_t _type = no_type;
+
+		int _frame{ 0 };
+		int _max_frames{ 0 };
+		int _frame_delay{ 0 };
+
+	public:
+		dirs dir{ dirs::stop };
+
+		BASE(uint8_t _what_to_create, float _sx, float _sy);
+		virtual ~BASE() {};
+
+		int GetFrame();
+		uint8_t GetType() const;
+		bool ChangeType(uint8_t _to_what);
+	};
+
 }
