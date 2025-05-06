@@ -672,3 +672,451 @@ bool dll::BASE::ChangeType(uint8_t _to_what)
 }
 
 /////////////////////////////////////////////
+
+// CREATURE *********************************
+
+void dll::CREATURE::SetPathInfo(float _to_where_x, float _to_where_y)
+{
+	move_sx = start.x;
+	move_sy = start.y;
+
+	move_ex = _to_where_x;
+	move_ey = _to_where_y;
+
+	if (move_sx == move_ex || (move_ex < move_sx && move_ex >= move_sx - width) || (move_ex > move_sx && move_ex <= end.x))
+	{
+		vert_dir = true;
+		return;
+	}
+	if (move_sy == move_ey || (move_ey < move_sy && move_ey >= move_sy - height) || (move_ey > move_sy && move_ey <= end.y))
+	{
+		hor_dir = true;
+		return;
+	}
+
+	slope = (move_ey - move_sy) / (move_ex - move_sx);
+	intercept = move_sy - slope * move_sx;
+}
+
+dll::CREATURE::CREATURE(uint8_t _whattype, float _wherex, float _wherey) :BASE(_whattype, _wherex, _wherey)
+{
+	switch (_whattype)
+	{
+	case ev_archer_type:
+		move_points = 20;
+		attack_delay = 100;
+		heal_delay = 2;
+		max_lifes = 80;
+		strenght = 40;
+		lifes = max_lifes;
+		break;
+
+	case ev_coyote_type:
+		move_points = 40;
+		attack_delay = 80;
+		heal_delay = 3;
+		max_lifes = 100;
+		strenght = 50;
+		lifes = max_lifes;
+		break;
+
+	case ev_dragon_type:
+		move_points = 35;
+		attack_delay = 150;
+		heal_delay = 4;
+		max_lifes = 150;
+		strenght = 80;
+		lifes = max_lifes;
+		break;
+
+	case ev_hydra_type:
+		move_points = 15;
+		attack_delay = 120;
+		heal_delay = 3;
+		max_lifes = 120;
+		strenght = 50;
+		lifes = max_lifes;
+		break;
+
+	case ev_mage_type:
+		move_points = 10;
+		attack_delay = 60;
+		heal_delay = 3;
+		max_lifes = 50;
+		strenght = 40;
+		lifes = max_lifes;
+		break;
+
+	case ev_minotaur_type:
+		move_points = 25;
+		attack_delay = 80;
+		heal_delay = 5;
+		max_lifes = 120;
+		strenght = 65;
+		lifes = max_lifes;
+		break;
+
+	case ev_warrior_type:
+		move_points = 35;
+		attack_delay = 100;
+		heal_delay = 2;
+		max_lifes = 90;
+		strenght = 30;
+		lifes = max_lifes;
+		break;
+
+	case gd_archer_type:
+		move_points = 25;
+		attack_delay = 100;
+		heal_delay = 2;
+		max_lifes = 80;
+		strenght = 45;
+		lifes = max_lifes;
+		break;
+
+	case gd_horse_type:
+		move_points = 45;
+		attack_delay = 90;
+		heal_delay = 4;
+		max_lifes = 90;
+		strenght = 40;
+		lifes = max_lifes;
+		break;
+
+	case gd_dragon_type:
+		move_points = 40;
+		attack_delay = 140;
+		heal_delay = 4;
+		max_lifes = 150;
+		strenght = 85;
+		lifes = max_lifes;
+		break;
+
+	case gd_hydra_type:
+		move_points = 15;
+		attack_delay = 120;
+		heal_delay = 3;
+		max_lifes = 120;
+		strenght = 50;
+		lifes = max_lifes;
+		break;
+
+	case gd_unicorn_type:
+		move_points = 55;
+		attack_delay = 85;
+		heal_delay = 3;
+		max_lifes = 100;
+		strenght = 45;
+		lifes = max_lifes;
+		break;
+
+	case gd_minotaur_type:
+		move_points = 25;
+		attack_delay = 90;
+		heal_delay = 3;
+		max_lifes = 100;
+		strenght = 70;
+		lifes = max_lifes;
+		break;
+
+	case gd_warrior_type:
+		move_points = 30;
+		attack_delay = 90;
+		heal_delay = 2;
+		max_lifes = 100;
+		strenght = 35;
+		lifes = max_lifes;
+		break;
+	}
+}
+
+bool dll::CREATURE::Move(float _to_x, float _to_y)
+{
+	SetPathInfo(_to_x, _to_y);
+
+	--move_points;
+	if (move_points <= 0)
+	{
+		switch (_type)
+		{
+		case ev_archer_type:
+			move_points = 20;
+			break;
+
+		case ev_coyote_type:
+			move_points = 40;
+			break;
+
+		case ev_dragon_type:
+			move_points = 35;
+			break;
+
+		case ev_hydra_type:
+			move_points = 15;
+			break;
+
+		case ev_mage_type:
+			move_points = 10;
+			break;
+
+		case ev_minotaur_type:
+			move_points = 25;
+			break;
+
+		case ev_warrior_type:
+			move_points = 35;
+			break;
+
+		case gd_archer_type:
+			move_points = 25;
+			break;
+
+		case gd_horse_type:
+			move_points = 45;
+			break;
+
+		case gd_dragon_type:
+			move_points = 40;
+			break;
+
+		case gd_hydra_type:
+			move_points = 15;
+			break;
+
+		case gd_unicorn_type:
+			move_points = 55;
+			break;
+
+		case gd_minotaur_type:
+			move_points = 25;
+			break;
+
+		case gd_warrior_type:
+			move_points = 30;
+			break;
+		}
+
+		return false;
+	}
+
+	if (vert_dir)
+	{
+		if (move_ey < move_sy)
+		{
+			if (start.y - 1.0f > sky)
+			{
+				--start.y;
+				SetEdges();
+				return true;
+			}
+	
+			return false;
+	
+		}
+		else if (move_ey > move_sy)
+		{
+			if (end.y + 1.0f < ground)
+			{
+				++start.y;
+				SetEdges();
+				return true;
+			}
+			return false;
+		}
+	}
+	if (hor_dir)
+	{
+		if (move_ex < move_sx)
+		{
+			if (start.x - 1.0f > 0)
+			{
+				--start.x;
+				SetEdges();
+				return true;
+			}
+
+			return false;
+
+		}
+		else if (move_ex > move_sx)
+		{
+			if (end.x + 1.0f < scr_width)
+			{
+				++start.x;
+				SetEdges();
+				return true;
+			}
+			return false;
+		}
+	}
+
+	if (move_ex < move_sx)
+	{
+		if (start.x - 1.0f > 0)
+		{
+			--start.x;
+			start.y = start.x * slope + intercept;
+			SetEdges();
+			return true;
+		}
+		return false;
+	}
+	else if (move_ex > move_sx)
+	{
+		if (end.x + 1.0f < scr_width)
+		{
+			++start.x;
+			start.y = start.x * slope + intercept;
+			SetEdges();
+			return true;
+		}
+		return false;
+	}
+
+	return false;
+}
+int dll::CREATURE::Attack()
+{
+	--attack_delay;
+	if (attack_delay <= 0)
+	{
+		switch (_type)
+				{
+				case ev_archer_type:
+					attack_delay = 100;
+					break;
+
+				case ev_coyote_type:
+					attack_delay = 80;
+					break;
+
+				case ev_dragon_type:
+					attack_delay = 150;
+					break;
+
+				case ev_hydra_type:
+					attack_delay = 120;
+					break;
+
+				case ev_mage_type:
+					attack_delay = 60;
+					break;
+
+				case ev_minotaur_type:
+					attack_delay = 80;
+					break;
+
+				case ev_warrior_type:
+					attack_delay = 100;
+					break;
+
+				case gd_archer_type:
+					attack_delay = 100;
+					break;
+
+				case gd_horse_type:
+					attack_delay = 90;
+					break;
+
+				case gd_dragon_type:
+					attack_delay = 140;
+					break;
+
+				case gd_hydra_type:
+					attack_delay = 120;
+					break;
+
+				case gd_unicorn_type:
+					attack_delay = 85;
+					break;
+
+				case gd_minotaur_type:
+					attack_delay = 90;
+					break;
+
+				case gd_warrior_type:
+					attack_delay = 90;
+					break;
+				}
+
+		return strenght;
+	}
+
+	return 0;
+}
+void dll::CREATURE::Heal()
+{
+	--heal_delay;
+	if (heal_delay <= 0)
+	{
+		switch (_type)
+		{
+		case ev_archer_type:
+			heal_delay = 2;
+			break;
+
+		case ev_coyote_type:
+			heal_delay = 3;
+			break;
+
+		case ev_dragon_type:
+			heal_delay = 4;
+			break;
+
+		case ev_hydra_type:
+			heal_delay = 3;
+			break;
+
+		case ev_mage_type:
+			heal_delay = 3;
+			break;
+
+		case ev_minotaur_type:
+			heal_delay = 5;
+			break;
+
+		case ev_warrior_type:
+			heal_delay = 2;
+			break;
+
+		case gd_archer_type:
+			heal_delay = 2;
+			break;
+
+		case gd_horse_type:
+			heal_delay = 4;
+			break;
+
+		case gd_dragon_type:
+			heal_delay = 4;
+			break;
+
+		case gd_hydra_type:
+			heal_delay = 3;
+			break;
+
+		case gd_unicorn_type:
+			heal_delay = 3;
+			break;
+
+		case gd_minotaur_type:
+			heal_delay = 3;
+			break;
+
+		case gd_warrior_type:
+			heal_delay = 2;
+			break;
+		}
+
+		RANDIt _Randerer;
+
+		if (lifes + 40 + _Randerer(0, 20) <= max_lifes)lifes = +40 + _Randerer(0, 20);
+		else lifes = max_lifes;
+	}
+}
+int dll::CREATURE::GetMaxLifes()const
+{
+	return max_lifes;
+}
+
+/////////////////////////////////////////////

@@ -154,4 +154,46 @@ namespace dll
 		bool ChangeType(uint8_t _to_what);
 	};
 
+	class HELPSRV_API CREATURE :public BASE
+	{
+	protected:
+
+		bool hor_dir{ false };
+		bool vert_dir{ false };
+
+		float move_sx{ 0 };
+		float move_sy{ 0 };
+
+		float move_ex{ 0 };
+		float move_ey{ 0 };
+
+		float slope{ 0 };
+		float intercept{ 0 };
+
+		void SetPathInfo(float _to_where_x, float _to_where_y);
+
+		int move_points{ 0 };
+		int attack_delay{ 0 };
+		int heal_delay{ 0 };
+
+		int max_lifes{ 0 };
+	public:
+
+		int strenght{ 0 };
+		int lifes{ 0 };
+		states state{ states::heal };
+
+		CREATURE(uint8_t _whattype, float _wherex, float _wherey);
+		virtual ~CREATURE() {};
+
+		bool Move(float _to_x, float _to_y);
+		int Attack();
+		void Heal();
+		int GetMaxLifes()const;
+		virtual void AINextMove(GROUPPER<FPOINT>& Enemies) = 0;
+	};
+
+
+	typedef BASE* Fields;
+
 }
