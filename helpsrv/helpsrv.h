@@ -45,7 +45,7 @@ constexpr uint8_t gd_warrior_type{ 23 };
 
 
 enum class dirs { stop = 0, up = 1, down = 2, left = 3, right = 4 };
-enum class states { move = 0, attack = 1, heal = 2, flee = 3 };
+enum class states { move = 0, attack = 1, heal = 2, flee = 3, stop = 4, shoot = 5,next_turn = 6 };
 
 struct FPOINT
 {
@@ -173,6 +173,7 @@ namespace dll
 		void SetPathInfo(float _to_where_x, float _to_where_y);
 
 		int move_points{ 0 };
+		int max_move_points{ 0 };
 		int attack_delay{ 0 };
 		int heal_delay{ 0 };
 
@@ -181,7 +182,7 @@ namespace dll
 
 		int strenght{ 0 };
 		int lifes{ 0 };
-		states state{ states::heal };
+		states state{ states::stop };
 
 		CREATURE(uint8_t _whattype, float _wherex, float _wherey);
 		virtual ~CREATURE() {};
@@ -190,10 +191,27 @@ namespace dll
 		int Attack();
 		void Heal();
 		int GetMaxLifes()const;
-		virtual void AINextMove(GROUPPER<FPOINT>& Enemies) = 0;
+		virtual states AINextMove(GROUPPER<FPOINT>& Enemies) = 0;
+		virtual void Release() = 0;
 	};
 
+	class EVILS :public CREATURE
+	{
+	protected:
+		EVILS(uint8_t _which, float _sx, float _sy);
+
+	public:
+
+		states AINextMove(GROUPPER<FPOINT>& Enemies) override;
+		void Release() override;
+
+		friend HELPSRV_API EVILS* CreatureFactory(uint8_t which, float sx, float sy);
+	};
+
+	//////////////////////////////////////////////////////
 
 	typedef BASE* Fields;
+	typedef EVILS* Bad;
 
+	HELPSRV_API Bad CreatureFactory(uint8_t which, float sx, float sy);
 }

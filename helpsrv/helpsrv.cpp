@@ -828,6 +828,8 @@ dll::CREATURE::CREATURE(uint8_t _whattype, float _wherex, float _wherey) :BASE(_
 		lifes = max_lifes;
 		break;
 	}
+
+	max_move_points = move_points;
 }
 
 bool dll::CREATURE::Move(float _to_x, float _to_y)
@@ -1120,3 +1122,67 @@ int dll::CREATURE::GetMaxLifes()const
 }
 
 /////////////////////////////////////////////
+
+// EVILS ***********************************
+
+dll::EVILS::EVILS(uint8_t _which, float _sx, float _sy) :CREATURE(_which, _sx, _sy) {};
+
+states dll::EVILS::AINextMove(GROUPPER<FPOINT>& Enemies)
+{
+	if (move_points <= 0 || state == states::next_turn)
+	{
+		move_points = max_move_points;
+		state = states::next_turn;
+		return state;
+	}
+
+	RANDIt _Randerer;
+
+	if ((lifes < max_lifes / 2 && _Randerer(0, 3) == 1) || (state == states::heal && lifes < max_lifes))
+	{
+		Heal();
+		state = states::heal;
+		if (lifes >= max_lifes)
+		{
+			state = states::stop;
+			return state;
+		}
+		return state;
+	}
+
+	state = states::stop;
+
+	Sort(Enemies, center);
+
+	bool melee = false;
+
+	if (Enemies.begin().x >= start.x && Enemies.begin().x <= end.x && Enemies.begin().y >= start.y && Enemies.begin().y <= end.y)
+		melee = true;
+
+	if (_type == ev_archer_type || _type == gd_archer_type || _type == ev_mage_type)
+	{
+		if (melee)
+		{
+			state = states::attack;
+			return state;
+		}
+		else
+		{
+			state = states::shoot;
+			return state;
+		}
+	}
+	else
+	{
+		state = states::move;
+		return state;
+	}
+
+	return state;
+}
+void dll::EVILS::Release()
+{
+	delete this;
+}
+
+///////////////////////////////////////////
