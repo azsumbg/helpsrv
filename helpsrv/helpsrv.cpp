@@ -79,7 +79,7 @@ template<typename T> T& dll::GROUPPER<T>::operator[](size_t index)
 	T* dummy{ reinterpret_cast<T*>(calloc(1,sizeof(T))) };
 	if (index < next_pos)return mPtr[index];
 
-	return dummy;
+	return *dummy;
 }
 template<typename T> void dll::GROUPPER<T>::operator()(size_t index, T element)
 {
@@ -88,13 +88,13 @@ template<typename T> void dll::GROUPPER<T>::operator()(size_t index, T element)
 
 template<typename T> T& dll::GROUPPER<T>::begin()
 {
-	T* dummy{ reinterpret_cast(calloc(1,sizeof(T))) };
+	T* dummy{ reinterpret_cast<T*>(calloc(1,sizeof(T))) };
 	if (is_valid && next_pos > 0)return *mPtr;
-	return dummy;
+	return *dummy;
 }
 template<typename T> T& dll::GROUPPER<T>::last()
 {
-	T* dummy{ reinterpret_cast(calloc(1,sizeof(T))) };
+	T* dummy{ reinterpret_cast<T*>(calloc(1,sizeof(T))) };
 	if (is_valid && next_pos > 0)return mPtr[next_pos - 1];
 	return dummy;
 }
@@ -112,8 +112,8 @@ template<typename T> bool dll::GROUPPER<T>::insert(size_t index, T element)
 	{
 		if (next_pos >= max_size)
 		{
-			T* tempPtr{ reinterpret_cast<T*>(calloc(max_size + 1,sizeof(T)) };
-			for (size_t count = 0; count < max_size + 1, ++count)
+			T* tempPtr{ reinterpret_cast<T*>(calloc(max_size + 1,sizeof(T))) };
+			for (size_t count = 0; count < max_size + 1; ++count)
 			{
 				if (count < index)tempPtr[count] = mPtr[count];
 				else if (count == index)tempPtr[count] = element;
@@ -126,8 +126,8 @@ template<typename T> bool dll::GROUPPER<T>::insert(size_t index, T element)
 		}
 		else
 		{
-			T* tempPtr{ reinterpret_cast<T*>(calloc(max_size,sizeof(T)) };
-			for (size_t count = 0; count < next_pos, ++count)
+			T* tempPtr{ reinterpret_cast<T*>(calloc(max_size,sizeof(T))) };
+			for (size_t count = 0; count < next_pos; ++count)
 			{
 				if (count < index)tempPtr[count] = mPtr[count];
 				else if (count == index)tempPtr[count] = element;
@@ -546,7 +546,7 @@ uint8_t dll::BASE::GetType() const
 {
 	return _type;
 }
-bool dll::BASE::ChangeType(uint8_t _to_what)
+void dll::BASE::ChangeType(uint8_t _to_what)
 {
 	_type = _to_what;
 	_frame = 0;
@@ -1344,3 +1344,25 @@ void dll::SHOTS::Release()
 }
 
 ///////////////////////////////////////////
+
+// FACTORIES ******************************
+
+HELPSRV_API dll::Creatures dll::CreatureFactory(uint8_t which, float sx, float sy)
+{
+	Creatures ret{ nullptr };
+
+	if (which == ev_archer_type || which == ev_coyote_type || which == ev_dragon_type || which == ev_hydra_type
+		|| which == ev_warrior_type || which == ev_mage_type || which == ev_minotaur_type) ret = new dll::EVILS(which, sx, sy);
+	else if (which == gd_archer_type || which == gd_unicorn_type || which == gd_dragon_type || which == gd_hydra_type
+		|| which == gd_warrior_type || which == gd_horse_type || which == gd_minotaur_type) ret = new dll::HERO(which, sx, sy);
+
+	return ret;
+}
+HELPSRV_API dll::Shot dll::ShotFactory(uint8_t which, float sx, float sy, float to_x, float to_y)
+{
+	Shot ret{ nullptr };
+
+	ret = new SHOTS(which, sx, sy, to_x, to_y);
+
+	return ret;
+}

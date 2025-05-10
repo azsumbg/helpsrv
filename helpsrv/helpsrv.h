@@ -151,7 +151,7 @@ namespace dll
 
 		int GetFrame();
 		uint8_t GetType() const;
-		bool ChangeType(uint8_t _to_what);
+		void ChangeType(uint8_t _to_what);
 	};
 
 	class HELPSRV_API SHOTS :public BASE
@@ -177,7 +177,7 @@ namespace dll
 		bool Move();
 		void Release();
 
-		friend HELPSRV_API SHOTS* ShotFactory(uint8_t which, float sx, float sy);
+		friend HELPSRV_API SHOTS* ShotFactory(uint8_t which, float sx, float sy, float to_x, float to_y);
 	};
 
 	class HELPSRV_API CREATURE :public BASE
@@ -255,5 +255,5 @@ namespace dll
 
 	HELPSRV_API Creatures CreatureFactory(uint8_t which, float sx, float sy);
 
-	HELPSRV_API SHOTS* ShotFactory(uint8_t which, float sx, float sy);
+	HELPSRV_API Shot ShotFactory(uint8_t which, float sx, float sy, float to_x, float to_y);
 }
