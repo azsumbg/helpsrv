@@ -154,6 +154,32 @@ namespace dll
 		bool ChangeType(uint8_t _to_what);
 	};
 
+	class HELPSRV_API SHOTS :public BASE
+	{
+	protected:
+		
+		float init_x{ 0 };
+		float init_y{ 0 };
+		float target_x{ 0 };
+		float target_y{ 0 };
+
+		float slope{ 0 };
+		float intercept{ 0 };
+
+		bool hor_dir{ false };
+		bool vert_dir{ false };
+
+	public:
+		int strenght{ 0 };
+
+		SHOTS(uint8_t what, float _tox, float _toy, float _targ_x, float _targ_y);
+
+		bool Move();
+		void Release();
+
+		friend HELPSRV_API SHOTS* ShotFactory(uint8_t which, float sx, float sy);
+	};
+
 	class HELPSRV_API CREATURE :public BASE
 	{
 	protected:
@@ -205,13 +231,29 @@ namespace dll
 		states AINextMove(GROUPPER<FPOINT>& Enemies) override;
 		void Release() override;
 
-		friend HELPSRV_API EVILS* CreatureFactory(uint8_t which, float sx, float sy);
+		friend HELPSRV_API CREATURE* CreatureFactory(uint8_t which, float sx, float sy);
+	};
+
+	class HERO :public CREATURE
+	{
+	protected:
+		HERO(uint8_t _which, float _sx, float _sy);
+
+	public:
+
+		states AINextMove(GROUPPER<FPOINT>& Enemies) override;
+		void Release() override;
+
+		friend HELPSRV_API CREATURE* CreatureFactory(uint8_t which, float sx, float sy);
 	};
 
 	//////////////////////////////////////////////////////
 
 	typedef BASE* Fields;
-	typedef EVILS* Bad;
+	typedef CREATURE* Creatures;
+	typedef SHOTS* Shot;
 
-	HELPSRV_API Bad CreatureFactory(uint8_t which, float sx, float sy);
+	HELPSRV_API Creatures CreatureFactory(uint8_t which, float sx, float sy);
+
+	HELPSRV_API SHOTS* ShotFactory(uint8_t which, float sx, float sy);
 }

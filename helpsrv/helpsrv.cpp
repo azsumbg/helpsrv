@@ -431,6 +431,16 @@ dll::BASE::BASE(uint8_t _what_to_create, float _sx, float _sy) :PROTON()
 		_max_frames = 8;
 		_frame_delay = 12;
 		break;
+
+	case ev_arrow_type:
+		NewDims(26.0f, 26.0f);
+		_max_frames = 0;
+		break;
+
+	case gd_arrow_type:
+		NewDims(26.0f, 26.0f);
+		_max_frames = 0;
+		break;
 	}
 }
 
@@ -1138,7 +1148,7 @@ states dll::EVILS::AINextMove(GROUPPER<FPOINT>& Enemies)
 
 	RANDIt _Randerer;
 
-	if ((lifes < max_lifes / 2 && _Randerer(0, 3) == 1) || (state == states::heal && lifes < max_lifes))
+	if ((lifes < max_lifes / 2 && _Randerer(0, 5) == 1) || (state == states::heal && lifes < max_lifes))
 	{
 		Heal();
 		state = states::heal;
@@ -1181,6 +1191,154 @@ states dll::EVILS::AINextMove(GROUPPER<FPOINT>& Enemies)
 	return state;
 }
 void dll::EVILS::Release()
+{
+	delete this;
+}
+
+///////////////////////////////////////////
+
+// HERO ***********************************
+
+dll::HERO::HERO(uint8_t _which, float _sx, float _sy) :CREATURE(_which, _sx, _sy) {};
+
+states dll::HERO::AINextMove(GROUPPER<FPOINT>& Enemies)
+{
+	if (move_points <= 0)
+	{
+		move_points = max_move_points;
+		state = states::next_turn;
+		return state;
+	}
+
+	if (lifes < max_lifes / 2)
+	{
+		state = states::heal;
+		if (lifes >= max_lifes)
+		{
+			state = states::stop;
+			return state;
+		}
+		return state;
+	}
+
+	state = states::stop;
+
+	Sort(Enemies, center);
+
+	return state;
+}
+void dll::HERO::Release()
+{
+	delete this;
+}
+
+///////////////////////////////////////////
+
+// SHOTS **********************************
+
+dll::SHOTS::SHOTS(uint8_t what, float _tox, float _toy, float _targ_x, float _targ_y) :BASE(what, _tox, _toy)
+{
+	init_x = _tox;
+	init_y = _toy;
+
+	target_x = _targ_x;
+	target_y = _targ_y;
+
+	if (init_x == target_x || (target_x < init_x && target_x >= init_x - width) || (target_x > init_x && target_x <= end.x))
+	{
+		vert_dir = true;
+		return;
+	}
+	if (init_y == target_y || (target_y < init_y && target_y >= init_y - height) || (target_y > init_y && target_y <= end.y))
+	{
+		hor_dir = true;
+		return;
+	}
+
+	slope = (target_y - init_y) / (target_x - init_x);
+	intercept = init_y - slope * init_x;
+
+}
+
+bool dll::SHOTS::Move()
+{
+	if (vert_dir)
+	{
+		if (target_y < init_y)
+		{
+			if (start.y - 1.0f > sky)
+			{
+				--start.y;
+				SetEdges();
+				return true;
+			}
+
+			return false;
+
+		}
+		else if (target_y > init_y)
+		{
+			if (end.y + 1.0f < ground)
+			{
+				++start.y;
+				SetEdges();
+				return true;
+			}
+			return false;
+		}
+	}
+	if (hor_dir)
+	{
+		if (target_x < init_x)
+		{
+			if (start.x - 1.0f > 0)
+			{
+				--start.x;
+				SetEdges();
+				return true;
+			}
+
+			return false;
+
+		}
+		else if (target_x > init_x)
+		{
+			if (end.x + 1.0f < scr_width)
+			{
+				++start.x;
+				SetEdges();
+				return true;
+			}
+			return false;
+		}
+	}
+
+	if (target_x < init_x)
+	{
+		if (start.x - 1.0f > 0)
+		{
+			--start.x;
+			start.y = start.x * slope + intercept;
+			SetEdges();
+			return true;
+		}
+		return false;
+	}
+	else if (target_x > init_x)
+	{
+		if (end.x + 1.0f < scr_width)
+		{
+			++start.x;
+			start.y = start.x * slope + intercept;
+			SetEdges();
+			return true;
+		}
+		return false;
+	}
+
+	return false;
+}
+void dll::SHOTS::Release()
 {
 	delete this;
 }
