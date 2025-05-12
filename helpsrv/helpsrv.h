@@ -101,6 +101,35 @@ namespace dll
 		void operator()(size_t index, T element);
 	};
 
+	template<typename T> bool SortVarDistance(GROUPPER<T>& bag)
+	{
+		if (typeid(T) != typeid(char) && typeid(T) != typeid(wchar_t) && typeid(T) != typeid(float) &&
+			typeid(T) != typeid(double) && typeid(T) != typeid(int))return false;
+
+		if (!bag.valid() || bag.size() < 2)return false;
+
+		bool is_ok = false;
+
+		while (!is_ok)
+		{
+			is_ok = true;
+
+			for (size_t i = 0; i < bag.size() - 1; ++i)
+			{
+				if (bag[i] > bag[i + 1])
+				{
+					T temp = bag[i];
+					bag[i] = bag[i + 1];
+					bag[i + 1] = temp;
+					is_ok = false;
+					break;
+				}
+			}
+		}
+
+		return true;
+	}
+	
 	float HELPSRV_API Distance(FPOINT start_point, FPOINT target_point);
 
 	bool HELPSRV_API Sort(GROUPPER<FPOINT>& bag, FPOINT target);
