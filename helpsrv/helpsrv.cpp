@@ -96,8 +96,8 @@ dll::PROTON::PROTON(float _sx, float _sy, float _width, float _height)
 	end.x = start.x + width;
 	end.y = start.y + height;
 
-	x_radius = start.x + (end.x - start.x) / 2;
-	y_radius = start.y + (end.y - start.y) / 2;
+	x_radius = (end.x - start.x) / 2;
+	y_radius = (end.y - start.y) / 2;
 
 	center.x = start.x + x_radius;
 	center.y = start.y + y_radius;
@@ -123,8 +123,8 @@ void dll::PROTON::NewDims(float _new_width, float _new_height)
 	end.x = start.x + width;
 	end.y = start.y + height;
 
-	x_radius = start.x + (end.x - start.x) / 2;
-	y_radius = start.y + (end.y - start.y) / 2;
+	x_radius = (end.x - start.x) / 2;
+	y_radius = (end.y - start.y) / 2;
 
 	center.x = start.x + x_radius;
 	center.y = start.y + y_radius;
@@ -135,7 +135,7 @@ void dll::PROTON::NewWidth(float _new_width)
 	
 	end.x = start.x + width;
 	
-	x_radius = start.x + (end.x - start.x) / 2;
+	x_radius = (end.x - start.x) / 2;
 	
 	center.x = start.x + x_radius;
 }
@@ -145,7 +145,7 @@ void dll::PROTON::NewHeight(float _new_height)
 
 	end.y = start.y + height;
 
-	y_radius = start.y + (end.y - start.y) / 2;
+	y_radius = (end.y - start.y) / 2;
 
 	center.y = start.y + y_radius;
 }
