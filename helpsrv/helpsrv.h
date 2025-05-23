@@ -44,7 +44,7 @@ constexpr uint8_t gd_unicorn_type{ 21 };
 constexpr uint8_t gd_minotaur_type{ 22 };
 constexpr uint8_t gd_warrior_type{ 23 };
 
-enum class dirs { stop = 0, up = 1, down = 2, left = 3, right = 4 };
+enum class dirs { stop = 0, up = 1, down = 2, left = 3, right = 4, up_left = 5, up_right = 6, down_left = 7, down_right = 8 };
 enum class states { move = 0, attack = 1, heal = 2, flee = 3, stop = 4, shoot = 5,next_turn = 6 };
 
 struct FPOINT
@@ -202,6 +202,8 @@ namespace dll
 		float slope{ 0 };
 		float intercept{ 0 };
 
+		float nadir = 0;
+
 		bool hor_dir{ false };
 		bool vert_dir{ false };
 
@@ -236,7 +238,6 @@ namespace dll
 
 		int move_points{ 0 };
 		int max_move_points{ 0 };
-		int attack_delay{ 0 };
 		int heal_delay{ 0 };
 
 		int max_lifes{ 0 };
@@ -250,9 +251,10 @@ namespace dll
 		virtual ~CREATURE() {};
 
 		bool Move(float _to_x, float _to_y);
-		int Attack();
+		int Attack() const;
 		void Heal();
 		int GetMaxLifes()const;
+		int GetMovePoints()const;
 		virtual states AINextMove(GROUPPER<FPOINT>& Enemies) = 0;
 		virtual void Release() = 0;
 	};

@@ -23,7 +23,6 @@ int dll::RANDIt::operator()(int min, int max)
 //////////////////////////////////////////////
 
 
-
 // Distance algorithm *************************
 
 float dll::Distance(FPOINT start_point, FPOINT target_point)
@@ -79,8 +78,8 @@ dll::PROTON::PROTON()
 	end.x = start.x + width;
 	end.y = start.y + height;
 
-	x_radius = start.x + (end.x - start.x) / 2;
-	y_radius = start.y + (end.y - start.y) / 2;
+	x_radius = (end.x - start.x) / 2;
+	y_radius = (end.y - start.y) / 2;
 
 	center.x = start.x + x_radius;
 	center.y = start.y + y_radius;
@@ -108,8 +107,8 @@ void dll::PROTON::SetEdges()
 	end.x = start.x + width;
 	end.y = start.y + height;
 
-	x_radius = start.x + (end.x - start.x) / 2;
-	y_radius = start.y + (end.y - start.y) / 2;
+	x_radius = (end.x - start.x) / 2;
+	y_radius = (end.y - start.y) / 2;
 
 	center.x = start.x + x_radius;
 	center.y = start.y + y_radius;
@@ -559,12 +558,12 @@ void dll::CREATURE::SetPathInfo(float _to_where_x, float _to_where_y)
 	move_ex = _to_where_x;
 	move_ey = _to_where_y;
 
-	if (move_sx == move_ex || (move_ex < move_sx && move_ex >= move_sx - width) || (move_ex > move_sx && move_ex <= end.x))
+	if (move_sx == move_ex)
 	{
 		vert_dir = true;
 		return;
 	}
-	if (move_sy == move_ey || (move_ey < move_sy && move_ey >= move_sy - height) || (move_ey > move_sy && move_ey <= end.y))
+	if (move_sy == move_ey)
 	{
 		hor_dir = true;
 		return;
@@ -579,8 +578,7 @@ dll::CREATURE::CREATURE(uint8_t _whattype, float _wherex, float _wherey) :BASE(_
 	switch (_whattype)
 	{
 	case ev_archer_type:
-		move_points = 20;
-		attack_delay = 100;
+		move_points = 150;
 		heal_delay = 2;
 		max_lifes = 80;
 		strenght = 40;
@@ -588,8 +586,7 @@ dll::CREATURE::CREATURE(uint8_t _whattype, float _wherex, float _wherey) :BASE(_
 		break;
 
 	case ev_coyote_type:
-		move_points = 40;
-		attack_delay = 80;
+		move_points = 200;
 		heal_delay = 3;
 		max_lifes = 100;
 		strenght = 50;
@@ -597,8 +594,7 @@ dll::CREATURE::CREATURE(uint8_t _whattype, float _wherex, float _wherey) :BASE(_
 		break;
 
 	case ev_dragon_type:
-		move_points = 35;
-		attack_delay = 150;
+		move_points = 250;
 		heal_delay = 4;
 		max_lifes = 150;
 		strenght = 80;
@@ -606,8 +602,7 @@ dll::CREATURE::CREATURE(uint8_t _whattype, float _wherex, float _wherey) :BASE(_
 		break;
 
 	case ev_hydra_type:
-		move_points = 15;
-		attack_delay = 120;
+		move_points = 150;
 		heal_delay = 3;
 		max_lifes = 120;
 		strenght = 50;
@@ -615,8 +610,7 @@ dll::CREATURE::CREATURE(uint8_t _whattype, float _wherex, float _wherey) :BASE(_
 		break;
 
 	case ev_mage_type:
-		move_points = 10;
-		attack_delay = 60;
+		move_points = 100;
 		heal_delay = 3;
 		max_lifes = 50;
 		strenght = 40;
@@ -624,8 +618,7 @@ dll::CREATURE::CREATURE(uint8_t _whattype, float _wherex, float _wherey) :BASE(_
 		break;
 
 	case ev_minotaur_type:
-		move_points = 25;
-		attack_delay = 80;
+		move_points = 250;
 		heal_delay = 5;
 		max_lifes = 120;
 		strenght = 65;
@@ -633,8 +626,7 @@ dll::CREATURE::CREATURE(uint8_t _whattype, float _wherex, float _wherey) :BASE(_
 		break;
 
 	case ev_warrior_type:
-		move_points = 35;
-		attack_delay = 100;
+		move_points = 250;
 		heal_delay = 2;
 		max_lifes = 90;
 		strenght = 30;
@@ -642,8 +634,7 @@ dll::CREATURE::CREATURE(uint8_t _whattype, float _wherex, float _wherey) :BASE(_
 		break;
 
 	case gd_archer_type:
-		move_points = 25;
-		attack_delay = 100;
+		move_points = 100;
 		heal_delay = 2;
 		max_lifes = 80;
 		strenght = 45;
@@ -651,8 +642,7 @@ dll::CREATURE::CREATURE(uint8_t _whattype, float _wherex, float _wherey) :BASE(_
 		break;
 
 	case gd_horse_type:
-		move_points = 45;
-		attack_delay = 90;
+		move_points = 250;
 		heal_delay = 4;
 		max_lifes = 90;
 		strenght = 40;
@@ -660,8 +650,7 @@ dll::CREATURE::CREATURE(uint8_t _whattype, float _wherex, float _wherey) :BASE(_
 		break;
 
 	case gd_dragon_type:
-		move_points = 40;
-		attack_delay = 140;
+		move_points = 200;
 		heal_delay = 4;
 		max_lifes = 150;
 		strenght = 85;
@@ -669,8 +658,7 @@ dll::CREATURE::CREATURE(uint8_t _whattype, float _wherex, float _wherey) :BASE(_
 		break;
 
 	case gd_hydra_type:
-		move_points = 15;
-		attack_delay = 120;
+		move_points = 150;
 		heal_delay = 3;
 		max_lifes = 120;
 		strenght = 50;
@@ -678,8 +666,7 @@ dll::CREATURE::CREATURE(uint8_t _whattype, float _wherex, float _wherey) :BASE(_
 		break;
 
 	case gd_unicorn_type:
-		move_points = 55;
-		attack_delay = 85;
+		move_points = 250;
 		heal_delay = 3;
 		max_lifes = 100;
 		strenght = 45;
@@ -687,8 +674,7 @@ dll::CREATURE::CREATURE(uint8_t _whattype, float _wherex, float _wherey) :BASE(_
 		break;
 
 	case gd_minotaur_type:
-		move_points = 25;
-		attack_delay = 90;
+		move_points = 250;
 		heal_delay = 3;
 		max_lifes = 100;
 		strenght = 70;
@@ -696,8 +682,7 @@ dll::CREATURE::CREATURE(uint8_t _whattype, float _wherex, float _wherey) :BASE(_
 		break;
 
 	case gd_warrior_type:
-		move_points = 30;
-		attack_delay = 90;
+		move_points = 200;
 		heal_delay = 2;
 		max_lifes = 100;
 		strenght = 35;
@@ -710,95 +695,60 @@ dll::CREATURE::CREATURE(uint8_t _whattype, float _wherex, float _wherey) :BASE(_
 
 bool dll::CREATURE::Move(float _to_x, float _to_y)
 {
-	SetPathInfo(_to_x, _to_y);
-
-	--move_points;
 	if (move_points <= 0)
 	{
-		switch (_type)
-		{
-		case ev_archer_type:
-			move_points = 20;
-			break;
-
-		case ev_coyote_type:
-			move_points = 40;
-			break;
-
-		case ev_dragon_type:
-			move_points = 35;
-			break;
-
-		case ev_hydra_type:
-			move_points = 15;
-			break;
-
-		case ev_mage_type:
-			move_points = 10;
-			break;
-
-		case ev_minotaur_type:
-			move_points = 25;
-			break;
-
-		case ev_warrior_type:
-			move_points = 35;
-			break;
-
-		case gd_archer_type:
-			move_points = 25;
-			break;
-
-		case gd_horse_type:
-			move_points = 45;
-			break;
-
-		case gd_dragon_type:
-			move_points = 40;
-			break;
-
-		case gd_hydra_type:
-			move_points = 15;
-			break;
-
-		case gd_unicorn_type:
-			move_points = 55;
-			break;
-
-		case gd_minotaur_type:
-			move_points = 25;
-			break;
-
-		case gd_warrior_type:
-			move_points = 30;
-			break;
-		}
-
+		state = states::next_turn;
 		return false;
 	}
+
+	SetPathInfo(_to_x, _to_y);
 
 	if (vert_dir)
 	{
 		if (move_ey < move_sy)
 		{
-			if (start.y - 1.0f > sky)
+			if (start.y <= move_ey)
+			{
+				state = states::stop;
+				return false;
+			}
+
+			if (start.y - 1 >= sky)
 			{
 				--start.y;
 				SetEdges();
+				move_points--;
 				return true;
 			}
-	
-			return false;
-	
+			else
+			{
+				state=states::stop;
+				return false;
+			}
 		}
 		else if (move_ey > move_sy)
 		{
+			if (end.y >= move_ey)
+			{
+				state = states::stop;
+				return false;
+			}
 			if (end.y + 1.0f < ground)
 			{
 				++start.y;
 				SetEdges();
+				move_points -= 1;
 				return true;
 			}
+			else
+			{
+				state = states::stop;
+				return false;
+			}
+		}	
+		else
+		{
+			state = states::stop;
 			return false;
 		}
 	}
@@ -806,121 +756,107 @@ bool dll::CREATURE::Move(float _to_x, float _to_y)
 	{
 		if (move_ex < move_sx)
 		{
+			if (start.x <= move_ex)
+			{
+				state = states::stop;
+				return false;
+			}
 			if (start.x - 1.0f > 0)
 			{
 				--start.x;
 				SetEdges();
+				--move_points;
 				return true;
 			}
-
-			return false;
-
+			else
+			{
+				state = states::stop;
+				return false;
+			}
 		}
 		else if (move_ex > move_sx)
 		{
+			if (end.x >= move_ex)
+			{
+				state = states::stop;
+				return false;
+			}
 			if (end.x + 1.0f < scr_width)
 			{
 				++start.x;
 				SetEdges();
+				--move_points;
 				return true;
 			}
+			else
+			{
+				state = states::stop;
+				return false;
+			}
+		}
+		else
+		{
+			state = states::stop;
 			return false;
 		}
 	}
 
 	if (move_ex < move_sx)
 	{
-		if (start.x - 1.0f > 0)
+		if (start.x <= move_ex)
+		{
+			if ((move_ey > move_sy && end.y >= move_ey) || (move_ey < move_sy && start.y <= move_ey))
+			{
+				state = states::stop;
+				return false;
+			}
+		}
+		if (start.x - 1.0f > 0 && start.y >= sky && end.y <= ground)
 		{
 			--start.x;
 			start.y = start.x * slope + intercept;
 			SetEdges();
+			--move_points;
 			return true;
 		}
-		return false;
+		else
+		{
+			state = states::stop;
+			return false;
+		}
 	}
 	else if (move_ex > move_sx)
 	{
-		if (end.x + 1.0f < scr_width)
+		if (end.x >= move_ex)
+		{
+			if ((move_ey > move_sy && end.y >= move_ey) || (move_ey < move_sy && start.y <= move_ey))
+			{
+				state = states::stop;
+				return false;;
+			}
+		}
+		if (end.x + 1.0f < scr_width && start.y >= sky && end.y <= ground)
 		{
 			++start.x;
 			start.y = start.x * slope + intercept;
 			SetEdges();
+			--move_points;
+			
 			return true;
 		}
-		return false;
+		else
+		{
+			state = states::stop;
+			return false;
+		}
 	}
-
+	
+	state = states::next_turn;
 	return false;
 }
-int dll::CREATURE::Attack()
+int dll::CREATURE::Attack() const
 {
-	--attack_delay;
-	if (attack_delay <= 0)
-	{
-		switch (_type)
-				{
-				case ev_archer_type:
-					attack_delay = 100;
-					break;
-
-				case ev_coyote_type:
-					attack_delay = 80;
-					break;
-
-				case ev_dragon_type:
-					attack_delay = 150;
-					break;
-
-				case ev_hydra_type:
-					attack_delay = 120;
-					break;
-
-				case ev_mage_type:
-					attack_delay = 60;
-					break;
-
-				case ev_minotaur_type:
-					attack_delay = 80;
-					break;
-
-				case ev_warrior_type:
-					attack_delay = 100;
-					break;
-
-				case gd_archer_type:
-					attack_delay = 100;
-					break;
-
-				case gd_horse_type:
-					attack_delay = 90;
-					break;
-
-				case gd_dragon_type:
-					attack_delay = 140;
-					break;
-
-				case gd_hydra_type:
-					attack_delay = 120;
-					break;
-
-				case gd_unicorn_type:
-					attack_delay = 85;
-					break;
-
-				case gd_minotaur_type:
-					attack_delay = 90;
-					break;
-
-				case gd_warrior_type:
-					attack_delay = 90;
-					break;
-				}
-
-		return strenght;
-	}
-
-	return 0;
+	return strenght;
 }
 void dll::CREATURE::Heal()
 {
@@ -988,7 +924,7 @@ void dll::CREATURE::Heal()
 
 		RANDIt _Randerer;
 
-		if (lifes + 40 + _Randerer(0, 20) <= max_lifes)lifes = +40 + _Randerer(0, 20);
+		if (lifes + 40 + _Randerer(0, 20) <= max_lifes)lifes = 40 + _Randerer(0, 20);
 		else lifes = max_lifes;
 	}
 }
@@ -996,12 +932,19 @@ int dll::CREATURE::GetMaxLifes()const
 {
 	return max_lifes;
 }
+int dll::CREATURE::GetMovePoints()const
+{
+	return move_points;
+}
 
 /////////////////////////////////////////////
 
 // EVILS ***********************************
 
-dll::EVILS::EVILS(uint8_t _which, float _sx, float _sy) :CREATURE(_which, _sx, _sy) {};
+dll::EVILS::EVILS(uint8_t _which, float _sx, float _sy) :CREATURE(_which, _sx, _sy) 
+{
+	dir = dirs::left;
+};
 
 states dll::EVILS::AINextMove(GROUPPER<FPOINT>& Enemies)
 {
@@ -1011,49 +954,70 @@ states dll::EVILS::AINextMove(GROUPPER<FPOINT>& Enemies)
 		state = states::next_turn;
 		return state;
 	}
-
-	RANDIt _Randerer;
-
-	if ((lifes < max_lifes / 2 && _Randerer(0, 5) == 1) || (state == states::heal && lifes < max_lifes))
+	else
 	{
-		Heal();
-		state = states::heal;
-		if (lifes >= max_lifes)
+		RANDIt _Randerer;
+
+		if ((lifes < max_lifes / 2 && _Randerer(0, 5) == 1) || (state == states::heal && lifes < max_lifes))
 		{
-			state = states::stop;
+			Heal();
+			state = states::heal;
+			move_points -= 10;
+			if (lifes >= max_lifes)
+			{
+				state = states::stop;
+				return state;
+			}
 			return state;
 		}
-		return state;
-	}
 
-	state = states::stop;
+		state = states::next_turn;
 
-	Sort(Enemies, center);
+		Sort(Enemies, center);
 
-	bool melee = false;
+		bool melee = false;
 
-	if (Enemies.begin().x >= start.x && Enemies.begin().x <= end.x && Enemies.begin().y >= start.y && Enemies.begin().y <= end.y)
-		melee = true;
+		if (Enemies.begin().x >= start.x && Enemies.begin().x <= end.x && Enemies.begin().y >= start.y && Enemies.begin().y <= end.y)
+			melee = true;
 
-	if (_type == ev_archer_type || _type == gd_archer_type || _type == ev_mage_type)
-	{
-		if (melee)
+		if (_type == ev_archer_type || _type == gd_archer_type || _type == ev_mage_type)
 		{
-			state = states::attack;
-			return state;
+			if (melee)
+			{
+				if (move_points <= 0)state = states::next_turn;
+				else
+				{
+					state = states::attack;
+					move_points -= 10;
+				}
+				return state;
+			}
+			else
+			{
+				if (move_points <= 0)state = states::next_turn;
+				else
+				{
+					state = states::shoot;
+					move_points -= max_move_points;
+				}
+				return state;
+			}
 		}
 		else
 		{
-			state = states::shoot;
-			return state;
+			if (melee)
+			{
+				if (move_points <= 0)state = states::next_turn;
+				else
+				{
+					state = states::attack;
+					move_points -= 10;
+				}
+				return state;
+			}
+			else state = states::move;
 		}
 	}
-	else
-	{
-		state = states::move;
-		return state;
-	}
-
 	return state;
 }
 void dll::EVILS::Release()
@@ -1065,7 +1029,10 @@ void dll::EVILS::Release()
 
 // HERO ***********************************
 
-dll::HERO::HERO(uint8_t _which, float _sx, float _sy) :CREATURE(_which, _sx, _sy) {};
+dll::HERO::HERO(uint8_t _which, float _sx, float _sy) :CREATURE(_which, _sx, _sy) 
+{
+	dir = dirs::right;
+};
 
 states dll::HERO::AINextMove(GROUPPER<FPOINT>& Enemies)
 {
@@ -1110,24 +1077,50 @@ dll::SHOTS::SHOTS(uint8_t what, float _tox, float _toy, float _targ_x, float _ta
 	target_x = _targ_x;
 	target_y = _targ_y;
 
-	if (init_x == target_x || (target_x < init_x && target_x >= init_x - width) || (target_x > init_x && target_x <= end.x))
+	if (_type == ev_arrow_type || _type == gd_arrow_type)nadir = start.y - 150.0f;
+	
+	if (init_x == target_x)
 	{
 		vert_dir = true;
 		return;
 	}
-	if (init_y == target_y || (target_y < init_y && target_y >= init_y - height) || (target_y > init_y && target_y <= end.y))
+	if (init_y == target_y)
 	{
 		hor_dir = true;
 		return;
 	}
 
-	slope = (target_y - init_y) / (target_x - init_x);
+	if (_type == ev_arrow_type || _type == gd_arrow_type)slope = (nadir - init_y) / (target_x - init_x);
+	else slope = (target_y - init_y) / (target_x - init_x);
 	intercept = init_y - slope * init_x;
 
 }
 
 bool dll::SHOTS::Move()
 {
+	if ((_type == gd_arrow_type || _type == ev_arrow_type) && start.y <= nadir && dir != dirs::down_left
+		&& dir != dirs::down_right)
+	{
+		init_x = start.x;
+		init_y = start.y;
+
+		if (init_x > target_x)dir = dirs::down_left;
+		else if (init_x < target_x) dir = dirs::down_right;
+		else dir = dirs::down_left;
+
+		if (init_x == target_x) vert_dir = true;
+		else vert_dir = false;
+
+		if (init_y == target_y) hor_dir = true;
+		else hor_dir = false;
+
+		if (!vert_dir)
+		{
+			slope = (target_y - init_y) / (target_x - init_x);
+			intercept = init_y - slope * init_x;
+		}
+	}
+
 	if (vert_dir)
 	{
 		if (target_y < init_y)
@@ -1140,7 +1133,6 @@ bool dll::SHOTS::Move()
 			}
 
 			return false;
-
 		}
 		else if (target_y > init_y)
 		{
