@@ -709,7 +709,7 @@ bool dll::CREATURE::Move(float _to_x, float _to_y)
 		{
 			if (start.y <= move_ey)
 			{
-				state = states::stop;
+				move_points = 0;
 				return false;
 			}
 
@@ -722,7 +722,9 @@ bool dll::CREATURE::Move(float _to_x, float _to_y)
 			}
 			else
 			{
-				state=states::stop;
+				start.y += 10.0f;
+				SetEdges();
+				move_points = 0;
 				return false;
 			}
 		}
@@ -730,10 +732,11 @@ bool dll::CREATURE::Move(float _to_x, float _to_y)
 		{
 			if (end.y >= move_ey)
 			{
-				state = states::stop;
+				move_points = 0;
 				return false;
 			}
-			if (end.y + 1.0f < ground)
+			
+			if (end.y + 1.0f <= ground)
 			{
 				++start.y;
 				SetEdges();
@@ -742,26 +745,23 @@ bool dll::CREATURE::Move(float _to_x, float _to_y)
 			}
 			else
 			{
-				state = states::stop;
+				start.y -= 10.0f;
+				SetEdges();
+				move_points = 0;
 				return false;
 			}
 		}	
-		else
-		{
-			state = states::stop;
-			return false;
-		}
 	}
-	if (hor_dir)
+	else if (hor_dir)
 	{
 		if (move_ex < move_sx)
 		{
-			if (start.x <= move_ex)
+			if (start.x <= move_ex) 
 			{
-				state = states::stop;
+				move_points = 0;
 				return false;
 			}
-			if (start.x - 1.0f > 0)
+			if (start.x - 1.0f >= 0)
 			{
 				--start.x;
 				SetEdges();
@@ -770,44 +770,30 @@ bool dll::CREATURE::Move(float _to_x, float _to_y)
 			}
 			else
 			{
-				state = states::stop;
+				move_points = 0;
 				return false;
 			}
 		}
 		else if (move_ex > move_sx)
 		{
-			if (end.x >= move_ex)
-			{
-				state = states::stop;
-				return false;
-			}
-			if (end.x + 1.0f < scr_width)
+			if (end.x >= move_ex)return false;
+			
+			if (end.x + 1.0f <= scr_width)
 			{
 				++start.x;
 				SetEdges();
 				--move_points;
 				return true;
 			}
-			else
-			{
-				state = states::stop;
-				return false;
-			}
-		}
-		else
-		{
-			state = states::stop;
-			return false;
 		}
 	}
-
-	if (move_ex < move_sx)
+	else if (move_ex < move_sx)
 	{
 		if (start.x <= move_ex)
 		{
 			if ((move_ey > move_sy && end.y >= move_ey) || (move_ey < move_sy && start.y <= move_ey))
 			{
-				state = states::stop;
+				move_points = 0;
 				return false;
 			}
 		}
@@ -821,7 +807,17 @@ bool dll::CREATURE::Move(float _to_x, float _to_y)
 		}
 		else
 		{
-			state = states::stop;
+			if (start.y < sky)
+			{
+				start.y += 10.0f;
+				SetEdges();
+			}
+			if (end.y > ground)
+			{
+				start.y -= 10.0f;
+				SetEdges();
+			}
+			move_points = 0;
 			return false;
 		}
 	}
@@ -831,8 +827,8 @@ bool dll::CREATURE::Move(float _to_x, float _to_y)
 		{
 			if ((move_ey > move_sy && end.y >= move_ey) || (move_ey < move_sy && start.y <= move_ey))
 			{
-				state = states::stop;
-				return false;;
+				move_points = 0;
+				return false;
 			}
 		}
 		if (end.x + 1.0f < scr_width && start.y >= sky && end.y <= ground)
@@ -846,16 +842,28 @@ bool dll::CREATURE::Move(float _to_x, float _to_y)
 		}
 		else
 		{
-			state = states::stop;
+			if (start.y < sky)
+			{
+				start.y += 10.0f;
+				SetEdges();
+			}
+			if (end.y > ground)
+			{
+				start.y -= 10.0f;
+				SetEdges();
+			}
+
+			move_points = 0;
 			return false;
 		}
 	}
 	
-	state = states::next_turn;
+	if (move_points <= 0)state = states::next_turn;
 	return false;
 }
-int dll::CREATURE::Attack() const
+int dll::CREATURE::Attack()
 {
+	state = states::next_turn;
 	return strenght;
 }
 void dll::CREATURE::Heal()
@@ -926,7 +934,9 @@ void dll::CREATURE::Heal()
 
 		if (lifes + 40 + _Randerer(0, 20) <= max_lifes)lifes = 40 + _Randerer(0, 20);
 		else lifes = max_lifes;
+		state = states::next_turn;
 	}
+	state = states::next_turn;
 }
 int dll::CREATURE::GetMaxLifes()const
 {
@@ -935,6 +945,14 @@ int dll::CREATURE::GetMaxLifes()const
 int dll::CREATURE::GetMovePoints()const
 {
 	return move_points;
+}
+int dll::CREATURE::GetMaxMovePoints() const
+{
+	return max_move_points;
+}
+void dll::CREATURE::SetMovePoints(int points)
+{
+	move_points = points;
 }
 
 /////////////////////////////////////////////
@@ -988,7 +1006,7 @@ states dll::EVILS::AINextMove(GROUPPER<FPOINT>& Enemies)
 				else
 				{
 					state = states::attack;
-					move_points -= 10;
+					move_points = 0;
 				}
 				return state;
 			}
@@ -1011,7 +1029,7 @@ states dll::EVILS::AINextMove(GROUPPER<FPOINT>& Enemies)
 				else
 				{
 					state = states::attack;
-					move_points -= 10;
+					move_points = 0;
 				}
 				return state;
 			}
@@ -1056,8 +1074,7 @@ states dll::HERO::AINextMove(GROUPPER<FPOINT>& Enemies)
 
 	state = states::stop;
 
-	Sort(Enemies, center);
-
+	
 	return state;
 }
 void dll::HERO::Release()

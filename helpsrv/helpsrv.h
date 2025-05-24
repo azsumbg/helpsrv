@@ -228,9 +228,6 @@ namespace dll
 		float move_sx{ 0 };
 		float move_sy{ 0 };
 
-		float move_ex{ 0 };
-		float move_ey{ 0 };
-
 		float slope{ 0 };
 		float intercept{ 0 };
 
@@ -243,6 +240,8 @@ namespace dll
 		int max_lifes{ 0 };
 	public:
 
+		float move_ex{ 0 };
+		float move_ey{ 0 };
 		int strenght{ 0 };
 		int lifes{ 0 };
 		states state{ states::stop };
@@ -251,10 +250,14 @@ namespace dll
 		virtual ~CREATURE() {};
 
 		bool Move(float _to_x, float _to_y);
-		int Attack() const;
+		int Attack();
 		void Heal();
 		int GetMaxLifes()const;
+		
 		int GetMovePoints()const;
+		int GetMaxMovePoints() const;
+		void SetMovePoints(int points);
+
 		virtual states AINextMove(GROUPPER<FPOINT>& Enemies) = 0;
 		virtual void Release() = 0;
 	};
